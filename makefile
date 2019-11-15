@@ -5,13 +5,13 @@ else
 endif
 
 all: main.o
-	$(CC) -o <program> main.o
+	$(CC) -o dirinf main.o
 
 main.o: main.c
 	$(CC) -c main.c
 
 run: all
-	./<program>
+	./dirinf
 
 clean:
 	touch main.o
