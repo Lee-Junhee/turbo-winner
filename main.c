@@ -8,12 +8,26 @@
 int main(int argc, char *argv[]) {
 	DIR *cwd;
 	char path[256];
+	char buff[256];
 	if (argc == 1) {
-		strcpy(path, ".");
+		printf("Enter Target Directory: ");
+		fgets(buff, 256, stdin);
+		printf("\n");
+		int c;
+		for(c = 0; c < 256; c++) {
+			if (buff[c] == *"\0") {
+				break;
+			}
+		}
+		strncpy(path, buff, c - 1);
 	}else {
 		strcpy(path, argv[1]);
 	}
 	cwd = opendir(path);
+	if errno {
+		printf("%s\n", strerror(errno));
+		return errno;
+	}
 
 	struct dirent *entry;
 
@@ -28,7 +42,7 @@ int main(int argc, char *argv[]) {
 	char all[11] = "-rwxrwxrwx";
 	while (1) {
 		entry = readdir(cwd);
-		if (!entry) {
+		if (entry == NULL) {
 			break;
 		}
 	       	strcpy(filename, entry->d_name);
@@ -39,7 +53,7 @@ int main(int argc, char *argv[]) {
 		size = fileinfo.st_size;
 		mode = fileinfo.st_mode;
 		strcpy(perms, none);
-		if (!(entry->d_type - 4)) {
+		if (entry->d_type == 4) {
 			strncpy(perms, "d", 1);
 		}else {
 			total += size;
